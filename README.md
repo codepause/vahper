@@ -2,9 +2,9 @@
 
 ### Demo app with use of CV + Pose Estimation 
 
-<img src="/demo/gifs/standing_still.gif?raw=true" width="400px">
+<img src="/demo/gifs/standing_still.gif?raw=true" width="720px">
 
-<img src="/demo/gifs/v1.gif?raw=true" width="400px">
+<img src="/demo/gifs/v1.gif?raw=true" width="720px">
 
 
 ### Requirements:
