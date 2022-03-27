@@ -2,9 +2,10 @@
 
 ### Demo app with use of CV + Pose Estimation 
 
-![standing_still](https://github.com/codepause/vahper/tree/main/demo/gifs/standing_still.gif)
+<img src="/demo/gifs/standing_still.gif?raw=true" width="400px">
 
-![v1](https://github.com/codepause/vahper/tree/main/demo/gifs/v1.gif)
+<img src="/demo/gifs/v1.gif?raw=true" width="400px">
+
 
 ### Requirements:
 - Install [EPTA](https://github.com/antistack/epta)
