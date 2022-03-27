@@ -133,6 +133,5 @@ vahper.egg-info
 .idea
 tests
 demo/temp
-demo/gifs
 vahper/tools/recognition/hpep_cut/weights
 vahper/tools/hookers/mouse_hookers/mouse_driver.py
