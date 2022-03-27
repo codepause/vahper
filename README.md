@@ -39,7 +39,7 @@ python setup.py develop
 - [Antistack basic tools for CV bots](https://github.com/antistack/epta)
 
 
-##P.S
+## P.S
 - Vanguard is preventing `WM mouse events`, so this code is _useless_ unless different `mouse driver` is implemented ;)
 - I do not support any cheaters. All of this was done for **_educational purposes only_**.
 - **Use at your own risk. No responsibilities taken.**
