@@ -16,9 +16,7 @@ class App:
         self.app_config = AppConfig()
         self.app_states = dict()
 
-        self.position_manager = ec.ToolDict([
-            eb.PositionMapperWrapper(vb.ImageCaptureMapper(self.app_config))
-        ])
+        self.position_manager = vb.PositionManager(self.app_config)
         self.ih = MssScreenHooker(config=self.app_config, position_manager=self.position_manager,
                                   key='image_capture')
         self.ir = SkeletonRecogniser(self.app_config.image_recognition_config)

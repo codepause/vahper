@@ -1,43 +1,65 @@
-from dataclasses import dataclass, field
-
-from epta.tools.base import PositionMapper
-
-
-@dataclass
-class ScreenCenterMapper(PositionMapper):
-    config: field(init=True)
-    _key_mappings: tuple = tuple()
-    name: str = 'screen_center'
-
-    relative_x: callable = lambda config: config.game_config.settings.screen_w / 2
-    relative_y: callable = lambda config: config.game_config.settings.screen_h / 2
-
-@dataclass
-class ImageCaptureMapper(ScreenCenterMapper):
-    name: str = 'image_capture'
-
-    x: callable = lambda _: None
-    y: callable = lambda _: None
-    w: callable = lambda _: None
-    h: callable = lambda _: None
-
-    def use(self, *args, **kwargs):
-        screen_cropper_settings = self.config.screen_capture_config.settings
-        self.x = lambda *_: self.relative_x(self.config) + screen_cropper_settings.x
-        self.y = lambda *_: self.relative_y(self.config) + screen_cropper_settings.y
-        self.w = lambda *_: screen_cropper_settings.w
-        self.h = lambda *_: screen_cropper_settings.h
+from epta.core import *
+from epta.core.base_ops import *
+from epta.tools.base import PositionMapperWrapper
 
 
-"""
-@dataclass
-class AdditionalRenderWindowMapper(PositionMapper):
-    config: field(init=True)
-    _key_mappings: tuple = tuple()
-    name: str = 'additional_renderer_window'
+class ConfigTool(Variable, ConfigDependent):
+    def __init__(self, *args, **kwargs):
+        super(ConfigTool, self).__init__(*args, **kwargs)
 
-    x: callable = lambda _: None
-    y: callable = lambda _: None
-    w: callable = lambda config: config.render_config.settings.w
-    h: callable = lambda config: config.render_config.settings.y
-"""
+    def use(self, *args, **kwargs):  # return this value
+        return self.tool.use(self.config)
+
+
+class ScreenCenterMapper(ToolDict):
+    def __init__(self, game_config: 'Config', name: str = 'screen_center_mapper', **kwargs):
+        super(ScreenCenterMapper, self).__init__(name=name, **kwargs)
+        tools = {
+            'relative_x': ConfigTool(config=game_config,
+                                     tool=Lambda(lambda cfg: cfg.settings.screen_w / 2)),
+            'relative_y': ConfigTool(config=game_config,
+                                     tool=Lambda(lambda cfg: cfg.settings.screen_h / 2)),
+        }
+        for key, _tool in tools.items():
+            self.add_tool(key, _tool)
+
+
+class ImageMapper(ToolDict):
+    def __init__(self, screen_capture_config: 'Config', name: str = 'image_mapper', **kwargs):
+        super(ImageMapper, self).__init__(name=name, **kwargs)
+        tools = {
+            'x': ConfigTool(config=screen_capture_config,
+                            tool=Lambda(lambda cfg: cfg.settings.x)),
+            'y': ConfigTool(config=screen_capture_config,
+                            tool=Lambda(lambda cfg: cfg.settings.y)),
+            'w': ConfigTool(config=screen_capture_config,
+                            tool=Lambda(lambda cfg: cfg.settings.w)),
+            'h': ConfigTool(config=screen_capture_config,
+                            tool=Lambda(lambda cfg: cfg.settings.h))
+        }
+        for key, _tool in tools.items():
+            self.add_tool(key, _tool)
+
+
+class PositionManager(ToolDict):
+    def __init__(self, cfg: 'Config', **kwargs):
+        tools = self.prepare_tools(cfg)
+        super(PositionManager, self).__init__(tools=tools, **kwargs)
+
+    @staticmethod
+    def prepare_tools(cfg: 'Config'):
+        base_mapper = ToolDict([PositionMapperWrapper(mapper) for mapper in
+                                [ScreenCenterMapper(cfg.game_config), ImageMapper(cfg.screen_capture_config)]],
+                               name='base_mapper')
+
+        position_wrapper = PositionMapperWrapper(ToolDict({
+            'x': Compose(lambda pm: pm['screen_center_mapper']['relative_x'] + pm['image_mapper']['x'],
+                         (Wrapper(base_mapper),)),
+            'y': Compose(lambda pm: pm['screen_center_mapper']['relative_y'] + pm['image_mapper']['y'],
+                         (Wrapper(base_mapper),)),
+            'w': Compose(lambda pm: pm['image_mapper']['w'],
+                         (Wrapper(base_mapper),)),
+            'h': Compose(lambda pm: pm['image_mapper']['h'],
+                         (Wrapper(base_mapper),)),
+        }, name='image_capture'))
+        return [base_mapper, position_wrapper]

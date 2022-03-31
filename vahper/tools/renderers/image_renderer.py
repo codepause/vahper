@@ -26,9 +26,7 @@ class ImageRenderer(PositionDependent, ConfigDependent):
                  key: str = None,
                  **kwargs):
         config = config()
-        position_manager = ec.ToolDict([
-            eb.PositionMapperWrapper(vb.ImageCaptureMapper(config))
-        ])
+        position_manager = vb.PositionManager(config)
 
         super(ImageRenderer, self).__init__(config=config, position_manager=position_manager, name=name,
                                             key=key, **kwargs)
