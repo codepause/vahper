@@ -6,3 +6,4 @@ pywin32==303
 setuptools==56.0.0
 torch==1.9.0+cu111
 opencv_python==4.5.3.56
+git+https://github.com/antistack/epta.git@8e24810

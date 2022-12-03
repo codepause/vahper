@@ -7,21 +7,14 @@
 <img src="/demo/gifs/v1.gif?raw=true" width="720px">
 
 
-### Requirements:
-- Install [EPTA](https://github.com/antistack/epta)
-```
-git clone https://github.com/antistack/epta
-cd epta
-pip install -r requirements.txt
-python setup.py develop
-```
-- Put [model checkpoint](https://download.01.org/opencv/openvino_training_extensions/models/human_pose_estimation/checkpoint_iter_370000.pth) to the `vahper\tools\recognition\hpep_cut\weights`
-- Install vahper
+### Installation:
+- Put [model checkpoint](https://download.01.org/opencv/openvino_training_extensions/models/human_pose_estimation/checkpoint_iter_370000.pth) into `vahper\tools\recognition\hpep_cut\weights`
+- Install Vahper:
 ```
 git clone https://github.com/codepause/vahper
 cd vahper
 pip install -r requirements.txt
-python setup.py develop
+python setup.py installg
 ```
 
 ### Hotkeys
@@ -36,7 +29,7 @@ python setup.py develop
   
 ### Acknowledgement
 - [Daniil-Osokin pytorch pose estimation](https://github.com/Daniil-Osokin/lightweight-human-pose-estimation.pytorch)
-- [Antistack basic tools for CV bots](https://github.com/antistack/epta)
+- [Easy Pipeline Tools for Automation](https://github.com/antistack/epta)
 
 
 ## P.S
